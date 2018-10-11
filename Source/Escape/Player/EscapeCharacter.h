@@ -6,6 +6,14 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UCharacterMovementComponent;
+
+UENUM()
+enum class ECharacterMovementSpeed : uint8 {
+	Walking,
+	Crouching,
+	Running
+};
 
 UCLASS()
 class ESCAPE_API AEscapeCharacter : public ACharacter
@@ -18,7 +26,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	/// COMPONENTS
@@ -28,6 +35,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UCameraComponent* CameraComp;
 
+	UCharacterMovementComponent* MovementComp;
+
 	/// INPUTS
 	void MoveForward(float Value);
 	void MoveRight(float Value);
@@ -35,6 +44,8 @@ protected:
 	void Turn(float Value);
 	void StartCrouch();
 	void EndCrouch();
+	void StartRun();
+	void EndRun();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input")
 	float ForwardInput;
@@ -44,4 +55,16 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input")
 	float Direction;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	ECharacterMovementSpeed MovementSpeed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	float CrouchingMovementSpeed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	float WalkingMovementSpeed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	float RunningMovementSpeed;
 };

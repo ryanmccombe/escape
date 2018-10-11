@@ -3,12 +3,16 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AEscapeCharacter::AEscapeCharacter() {
 	PrimaryActorTick.bCanEverTick = true;
 
 	/// COMPONENTS
+	MovementComp = Cast<UCharacterMovementComponent>(GetMovementComponent());
+	MovementComp->MaxWalkSpeed = WalkingMovementSpeed;
+
 	// Third Person Camera setup for now - TODO: remove this eventually
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	SpringArmComp->bUsePawnControlRotation = true;
@@ -18,7 +22,9 @@ AEscapeCharacter::AEscapeCharacter() {
 	CameraComp->SetupAttachment(SpringArmComp);
 
 	// Enable Crouch
-	ACharacter::GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+	MovementComp->GetNavAgentPropertiesRef().bCanCrouch = true;
+
+	MovementSpeed = ECharacterMovementSpeed::Walking;
 }
 
 void AEscapeCharacter::BeginPlay() {
@@ -42,6 +48,9 @@ void AEscapeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AEscapeCharacter::StartCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AEscapeCharacter::EndCrouch);
+
+	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AEscapeCharacter::StartRun);
+	PlayerInputComponent->BindAction("Run", IE_Released, this, &AEscapeCharacter::EndRun);
 }
 
 void AEscapeCharacter::MoveForward(float Value) {
@@ -63,9 +72,23 @@ void AEscapeCharacter::Turn(float Value) {
 }
 
 void AEscapeCharacter::StartCrouch() {
+	MovementSpeed = ECharacterMovementSpeed::Crouching;
+	MovementComp->MaxWalkSpeed = CrouchingMovementSpeed;
 	Crouch();
 }
 
 void AEscapeCharacter::EndCrouch() {
+	MovementSpeed = ECharacterMovementSpeed::Walking;
+	MovementComp->MaxWalkSpeed = WalkingMovementSpeed;
 	UnCrouch();
+}
+
+void AEscapeCharacter::StartRun() {
+	MovementSpeed = ECharacterMovementSpeed::Running;
+	MovementComp->MaxWalkSpeed = RunningMovementSpeed;
+}
+
+void AEscapeCharacter::EndRun() {
+	MovementSpeed = ECharacterMovementSpeed::Walking;
+	MovementComp->MaxWalkSpeed = WalkingMovementSpeed;
 }
