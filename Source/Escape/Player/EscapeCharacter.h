@@ -2,18 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Player/CharacterMovementSpeed.h"
 #include "EscapeCharacter.generated.h"
 
 class USpringArmComponent;
 class UCameraComponent;
 class UCharacterMovementComponent;
-
-UENUM()
-enum class ECharacterMovementSpeed : uint8 {
-	Walking,
-	Crouching,
-	Running
-};
 
 UCLASS()
 class ESCAPE_API AEscapeCharacter : public ACharacter
@@ -24,6 +18,13 @@ public:
 	AEscapeCharacter();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
+	/// GETTERS
+	float GetDirection() const;
+	float GetForwardInput() const;
+	float GetRightInput() const;
+	ECharacterMovementSpeed GetMovementSpeed() const;
 
 protected:
 	virtual void BeginPlay() override;
@@ -37,6 +38,7 @@ protected:
 
 	UCharacterMovementComponent* MovementComp;
 
+
 	/// INPUTS
 	void MoveForward(float Value);
 	void MoveRight(float Value);
@@ -47,6 +49,8 @@ protected:
 	void StartRun();
 	void EndRun();
 
+
+	/// VALUES CALCULATED FROM INPUTS
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input")
 	float ForwardInput;
 
@@ -56,6 +60,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input")
 	float Direction;
 
+
+	/// MOVEMENT MODES
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	ECharacterMovementSpeed MovementSpeed;
 

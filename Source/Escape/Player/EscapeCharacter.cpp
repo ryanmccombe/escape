@@ -5,7 +5,6 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-// Sets default values
 AEscapeCharacter::AEscapeCharacter() {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -92,3 +91,8 @@ void AEscapeCharacter::EndRun() {
 	MovementSpeed = ECharacterMovementSpeed::Walking;
 	MovementComp->MaxWalkSpeed = WalkingMovementSpeed;
 }
+
+float AEscapeCharacter::GetDirection() const { return Direction; }
+float AEscapeCharacter::GetForwardInput() const { return ForwardInput; }
+float AEscapeCharacter::GetRightInput() const { return RightInput; }
+ECharacterMovementSpeed AEscapeCharacter::GetMovementSpeed() const { return MovementSpeed; }
