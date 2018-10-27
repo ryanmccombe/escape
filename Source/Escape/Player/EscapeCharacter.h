@@ -26,6 +26,9 @@ public:
 	float GetRightInput() const;
 	ECharacterMovementSpeed GetMovementSpeed() const;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Gameplay")
+	bool bIsCarryingObjective;
+
 protected:
 	virtual void BeginPlay() override;
 
